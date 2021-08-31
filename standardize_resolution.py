@@ -43,7 +43,7 @@ if __name__ == "__main__":
             if not slide_id_cleaned == slide_id_cleaned:
                 warnings.warn("Slide IDs not maching for %s and %s" % (slide_id_original, slide_id_cleaned))
 
-            resolution_folder_dict = {res: os.path.join(input_args.output, slide_id_original, res + "x") for res in input_args.objective_powers}
+            resolution_folder_dict = {res: os.path.join(input_args.output, slide_id_original, str(res) + "x") for res in input_args.objective_powers}
 
             slide_object = Slide(slide_path)
             slide_object.add_proxy(cleaned_path)
@@ -55,8 +55,7 @@ if __name__ == "__main__":
         for slide_path in original_slides:
             slide_id_original = slide_path.split(".svs")[0].split("/")[-1]
 
-            resolution_folder_dict = {res: "%s%s/%dx/" % (input_args.output, slide_id_original, res) for res in
-                                      input_args.objective_powers}
+            resolution_folder_dict = {res: os.path.join(input_args.output, slide_id_original, str(res) + 'x') for res in input_args.objective_powers}
 
             slide_object = Slide(slide_path)
             for objective_power, folder in resolution_folder_dict.items():
