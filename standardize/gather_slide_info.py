@@ -20,7 +20,7 @@ def main(input_path, output_tsv, patients):
     tsv_file = open(output_tsv, 'w+')
     tsv_file.write(
         'PID\t\
-        \wsi_path\t\
+        wsi_path\t\
         objective-power\t\
         mpp-x\t\
         mpp-y\t\
@@ -65,20 +65,25 @@ def main(input_path, output_tsv, patients):
             for level in range(os_image.level_count):
                 if len(level_dim_factors) == 0:
                     level_dim_factors.append(1)
-                    base_level_dim_proportion = os_image.level_dimensions[0][0] / os_image.level_dimensions[0][1]
+                    base_level_dim_proportion = os_image.level_dimensions[0][0] / \
+                        os_image.level_dimensions[0][1]
                     estimated_magnification = float(obj_pow)
                     estimated_magnifications.append(estimated_magnification)
                 else:
-                    inverse_downsample_factor = os_image.level_dimensions[level][0] / os_image.level_dimensions[0][0]
-                    level_dim_proportion = os_image.level_dimensions[level][0] / os_image.level_dimensions[level][1]
+                    inverse_downsample_factor = os_image.level_dimensions[level][0] / \
+                        os_image.level_dimensions[0][0]
+                    level_dim_proportion = os_image.level_dimensions[level][0] / \
+                        os_image.level_dimensions[level][1]
                     assert round(base_level_dim_proportion) == round(
                         level_dim_proportion), "Dimensions at level %i mismatched from base" % level
                     level_dim_factors.append(inverse_downsample_factor)
                     assert round(os_image.level_downsamples[level]) == round(
                         1 / inverse_downsample_factor), "Mismatched downsample factor calculated (%f) vs. metadata (%f)" % (
-                    round(1 / inverse_downsample_factor), round(os_image.level_downsamples[level]))
-                    estimated_magnification = float(obj_pow) * inverse_downsample_factor
-                    estimated_magnifications.append(round(estimated_magnification, 2))
+                        round(1 / inverse_downsample_factor), round(os_image.level_downsamples[level]))
+                    estimated_magnification = float(
+                        obj_pow) * inverse_downsample_factor
+                    estimated_magnifications.append(
+                        round(estimated_magnification, 2))
                 print("\t", end="")
                 print(str(level), end="\t\t")
                 print(str(os_image.level_dimensions[level]), end="\t\t")
@@ -87,17 +92,18 @@ def main(input_path, output_tsv, patients):
             height, width = os_image.dimensions
             # These numbers can be updated but using from experience
             selected_level = get_level_for_downsample(os_image, 4)
-            selected_level_height, selected_level_width = os_image.level_dimensions[selected_level]
-            tsv_file.write(patient + '\t' + wsi_path + '\t' + \
-                           str(obj_pow) + '\t' + \
-                           str(mpp_x) + '\t' + str(mpp_y) + \
-                           '\t' + str(correct_power_dims) + \
-                           '\t' + str(height) + '\t' + str(width) + \
-                           '\t' + str(level_count) + \
-                           '\t' + str(selected_level) + \
-                           '\t' + str(selected_level_height) + \
-                           '\t' + str(selected_level_width) + \
-                           '\t' + str(estimated_magnifications) + \
+            selected_level_height, selected_level_width = os_image.level_dimensions[
+                selected_level]
+            tsv_file.write(patient + '\t' + wsi_path + '\t' +
+                           str(obj_pow) + '\t' +
+                           str(mpp_x) + '\t' + str(mpp_y) +
+                           '\t' + str(correct_power_dims) +
+                           '\t' + str(height) + '\t' + str(width) +
+                           '\t' + str(level_count) +
+                           '\t' + str(selected_level) +
+                           '\t' + str(selected_level_height) +
+                           '\t' + str(selected_level_width) +
+                           '\t' + str(estimated_magnifications) +
                            '\t' + str(os_image.level_dimensions) + '\n')
         except KeyError as k:
             print(patient + ',Error in one of the keys: %s\n' % k)
