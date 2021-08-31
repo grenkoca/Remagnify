@@ -22,7 +22,7 @@ def parse_args():
         "--save_info",
         type=bool,
         dest="save_info",
-        required=True,
+        required=False,
         default=True,
         help="Save original slide information to .tsv file. `True` or `False`. Output .tsv file will be saved to" +
         " {output_folder}/batch_info.tsv")
@@ -33,7 +33,7 @@ def parse_args():
         type=int,
         dest="objective_powers",
         required=True,
-        help="Objective powers to resample image to. Can be n integers.")
+        help="Objective powers to resample image to. Can be n integers seperated by spaces.")
     parser.add_argument(
         "-o",
         "--output",

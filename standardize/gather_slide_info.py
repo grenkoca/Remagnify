@@ -64,9 +64,6 @@ def gather_info(input_path, output_tsv, patients):
 
             level_dim_factors = []
             estimated_magnifications = []
-            current_level_dims = (0, 0)
-            estimated_magnification = float(obj_pow)
-            estimated_mpp = mpp_x
             print("\tLevel Downsamples:", os_image.level_downsamples)
             print("\tLevel:    ", end="")
             print("\tLvl. Dims:", end="\t")
