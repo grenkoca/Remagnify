@@ -102,7 +102,6 @@ class Slide(OpenSlide):
         new_dimensions = int(
             slide_image.shape[0] * fold_change), int(slide_image.shape[1] * fold_change)
         step = round(1 / fold_change)
-        print("Step size:", step)
         downsampled_image = slide_image[::step, ::step, :]
 
         print(

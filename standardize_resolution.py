@@ -71,11 +71,11 @@ if __name__ == "__main__":
         print(('=' * 23), 'GENERATING SUMMARY', ('=' * 23), end='\n')
 
         os.makedirs(input_args.output, exist_ok=True)
-        tsv_path = os.path.join(input_args.output, "pre_standardization_batch_info.tsv")
-        gather_info(input_args.original_folder, tsv_path, original_slides)
+        pre_tsv_path = os.path.join(input_args.output, "pre_standardization_batch_info.tsv")
+        gather_info(input_args.original_folder, pre_tsv_path, original_slides)
         print()
         print(('=' * 25), 'SUMMARY WRITTEN', ('=' * 25))
-        print(' Output Path: %s' % Path(tsv_path).resolve(), end='\n\n')
+        print(' Output Path: %s' % Path(pre_tsv_path).resolve(), end='\n\n')
 
     # If a folder of proxy images is given, then pair up the original WSIs and
     # proxy images.
@@ -132,3 +132,18 @@ if __name__ == "__main__":
                 output_file = folder + slide_id_original + ".tiff"
                 slide_object.save_downsampled(
                     output_file, objective_power, blur_image=False, use_proxy=False)
+
+    if input_args.save_info:
+        print()
+        print(('=' * 23), 'GENERATING SUMMARY', ('=' * 23), end='\n')
+        post_tsv_path = os.path.join(input_args.output, "post_standardization_batch_info.tsv")
+        new_slides = sorted(
+            glob(
+                input_args.output +
+                "*.tiff",
+                recursive=True))
+        gather_info(input_args.original_folder, post_tsv_path, new_slides)
+        print()
+        print(('=' * 25), 'SUMMARY WRITTEN', ('=' * 25))
+        print(' Output Path: %s' % Path(post_tsv_path).resolve(), end='\n\n')
+
