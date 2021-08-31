@@ -56,7 +56,7 @@ if __name__ == "__main__":
             slide_id_original = slide_path.split(".svs")[0].split("/")[-1]
 
             resolution_folder_dict = {res: "%s%s/%dx/" % (input_args.output, slide_id_original, res) for res in
-                                      input_args.resolutions}
+                                      input_args.objective_powers}
 
             slide_object = Slide(slide_path)
             for objective_power, folder in resolution_folder_dict.items():

@@ -19,7 +19,19 @@ def get_level_for_downsample(image, downsample):
 def main(input_path, output_tsv, patients):
     tsv_file = open(output_tsv, 'w+')
     tsv_file.write(
-        'PID\twsi_path\tobjective-power\tmpp-x\tmpp-y\tcorrect-power-dims\theight\twidth\tlevel_count\tselected_level\tselected_level_height\tselected_level_width\test_magnifications\n')
+        'PID\t\
+        \wsi_path\t\
+        objective-power\t\
+        mpp-x\t\
+        mpp-y\t\
+        correct-power-dims\t\
+        height\t\
+        width\t\
+        level_count\t\
+        selected_level\t\
+        elected_level_height\t\
+        selected_level_width\t\
+        test_magnifications\n')
     for patient in patients:
         print(os.path.basename(patient.strip('.svs')))
         wsi_path = os.path.join(input_path, patient)
