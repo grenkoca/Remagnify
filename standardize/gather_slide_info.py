@@ -35,10 +35,10 @@ def gather_info(input_path, output_tsv, patients):
         'magnifications\t' +
         'level_dims\n')
 
-    for patient in patients:
-        patient_id = Path(patient).name
-        print('\n    [' + os.path.basename(patient.strip('.svs')) + ']')
-        wsi_path = os.path.join(input_path, patient)
+    for patient_path in patients:
+        patient_id = Path(patient_path).name
+        print('\n    [' + os.path.basename(patient_path.strip('.svs')) + ']')
+        wsi_path = os.path.join(input_path, patient_path)
         try:
             os_image = OpenSlide(wsi_path)
         except OpenSlideUnsupportedFormatError as e:
