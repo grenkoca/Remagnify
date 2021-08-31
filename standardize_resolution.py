@@ -5,6 +5,9 @@ from standardize import Slide, gather_info
 from glob import glob
 import warnings
 from pathlib import Path
+import signal
+import sys
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -56,7 +59,6 @@ def parse_args():
 
     return args
 
-
 if __name__ == "__main__":
     # Parse input arguments and sort by name.
     input_args = parse_args()
@@ -76,6 +78,24 @@ if __name__ == "__main__":
         print()
         print(('=' * 25), 'SUMMARY WRITTEN', ('=' * 25))
         print(' Output Path: %s' % Path(pre_tsv_path).resolve(), end='\n\n')
+
+        def signal_handler(signal, frame):
+            print("\n", str(signal), "CAUGHT, TERMINATING...")
+            print()
+            print(('=' * 23), 'GENERATING SUMMARY', ('=' * 23), end='\n')
+            post_tsv_path = os.path.join(input_args.output, "post_standardization_batch_info.tsv")
+            new_slides = sorted(
+                glob(
+                    input_args.output +
+                    "*.tiff",
+                    recursive=True))
+            gather_info(input_args.original_folder, post_tsv_path, new_slides)
+            print()
+            print(('=' * 25), 'SUMMARY WRITTEN', ('=' * 25))
+            print(' Output Path: %s' % Path(post_tsv_path).resolve(), end='\n\n')
+            sys.exit(0)
+
+        signal.signal(signal.SIGINT, signal_handler)
 
     # If a folder of proxy images is given, then pair up the original WSIs and
     # proxy images.
