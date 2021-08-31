@@ -4,6 +4,8 @@
 #
 import os
 import argparse
+import warnings
+
 from openslide import OpenSlide, OpenSlideUnsupportedFormatError
 
 
@@ -15,26 +17,33 @@ def get_level_for_downsample(image, downsample):
         return -1
 
 
-def main(input_path, output_tsv, patients):
+def gather_info(input_path, output_tsv, patients):
     tsv_file = open(output_tsv, 'w+')
     tsv_file.write(
-        'PID\t\
-        wsi_path\t\
-        objective-power\t\
-        mpp-x\t\
-        mpp-y\t\
-        correct-power-dims\t\
-        height\t\
-        width\t\
-        level_count\t\
-        selected_level\t\
-        elected_level_height\t\
-        selected_level_width\t\
-        test_magnifications\n')
+        'PID\t' +
+        'wsi_path\t' +
+        'objective-power\t' +
+        'mpp-x\t' +
+        'mpp-y\t' +
+        'correct-power-dims\t' +
+        'height\t' +
+        'width\t' +
+        'level_count\t' +
+        'selected_level\t' +
+        'elected_level_height\t' +
+        'selected_level_width\t' +
+        'magnifications\t' +
+        'level_dims\n')
+
     for patient in patients:
-        print(os.path.basename(patient.strip('.svs')))
+        print('\n    [' + os.path.basename(patient.strip('.svs')) + ']')
         wsi_path = os.path.join(input_path, patient)
-        os_image = OpenSlide(wsi_path)
+        try:
+            os_image = OpenSlide(wsi_path)
+        except OpenSlideUnsupportedFormatError as e:
+            warnings.warn("Unable to open file %s, skipping" % str(wsi_path))
+            warnings.warn(str(e))
+            continue
         level_count = os_image.level_count
         properties = os_image.properties
         items = dict(properties.items())
@@ -62,10 +71,10 @@ def main(input_path, output_tsv, patients):
             print("\tLvl. Dims:", end="\t")
             print("\tEst. Mag: ", end="\n")
             for level in range(os_image.level_count):
+                base_level_dim_proportion = os_image.level_dimensions[0][0] / \
+                                            os_image.level_dimensions[0][1]
                 if len(level_dim_factors) == 0:
                     level_dim_factors.append(1)
-                    base_level_dim_proportion = os_image.level_dimensions[0][0] / \
-                        os_image.level_dimensions[0][1]
                     estimated_magnification = float(obj_pow)
                     estimated_magnifications.append(estimated_magnification)
                 else:
@@ -121,4 +130,4 @@ if __name__ == '__main__':
     output_tsv = os.path.abspath(args.output_tsv)
     patients = os.listdir(input_path)
 
-    main(input_path, output_tsv, patients)
+    gather_info(input_path, output_tsv, patients)

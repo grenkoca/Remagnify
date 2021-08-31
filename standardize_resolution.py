@@ -1,10 +1,10 @@
 import os
 
 import argparse
-from standardize import Slide
+from standardize import Slide, gather_info
 from glob import glob
 import warnings
-
+from pathlib import Path
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -17,6 +17,15 @@ def parse_args():
         dest="original_folder",
         required=True,
         help="Folder where openslide supported files are stored. Images can be nested in subfolders.")
+    parser.add_argument(
+        "-i",
+        "--save_info",
+        type=bool,
+        dest="save_info",
+        required=True,
+        default=True,
+        help="Save original slide information to .tsv file. `True` or `False`. Output .tsv file will be saved to" +
+        " {output_folder}/batch_info.tsv")
     parser.add_argument(
         "-op",
         "--objective_powers",
@@ -56,6 +65,12 @@ if __name__ == "__main__":
             input_args.original_folder +
             "*.svs",
             recursive=True))
+
+    if input_args.save_info:
+        os.makedirs(input_args.output, exist_ok=True)
+        tsv_path = os.path.join(input_args.output, "batch_info.tsv")
+        patients = [Path(pth).stem for pth in original_slides]
+        gather_info(input_args.original_folder, tsv_path, patients)
 
     # If a folder of proxy images is given, then pair up the original WSIs and
     # proxy images.
