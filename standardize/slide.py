@@ -87,17 +87,3 @@ class Slide(OpenSlide):
             imsave(fpath, downsampled_image)
         except Exception as e:
             raise IOError("Could not save image: %s" % e)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
