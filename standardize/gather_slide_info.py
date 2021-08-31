@@ -9,8 +9,7 @@ from openslide import OpenSlide, OpenSlideUnsupportedFormatError
 
 def get_level_for_downsample(image, downsample):
     for level in range(image.level_count):
-        if image.level_downsamples[level] >= (downsample - 0.1) and \
-                image.level_downsamples[level] <= (downsample + 0.1):
+        if (downsample - 0.1) <= image.level_downsamples[level] <= (downsample + 0.1):
             return level
     else:
         return -1
