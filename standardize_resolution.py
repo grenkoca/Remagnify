@@ -67,10 +67,15 @@ if __name__ == "__main__":
             recursive=True))
 
     if input_args.save_info:
+        print()
+        print(('=' * 23), 'GENERATING SUMMARY', ('=' * 23), end='\n')
+
         os.makedirs(input_args.output, exist_ok=True)
-        tsv_path = os.path.join(input_args.output, "batch_info.tsv")
-        patients = [Path(pth).stem for pth in original_slides]
-        gather_info(input_args.original_folder, tsv_path, patients)
+        tsv_path = os.path.join(input_args.output, "pre_standardization_batch_info.tsv")
+        gather_info(input_args.original_folder, tsv_path, original_slides)
+        print()
+        print(('=' * 25), 'SUMMARY WRITTEN', ('=' * 25))
+        print(' Output Path: %s' % Path(tsv_path).resolve(), end='\n\n')
 
     # If a folder of proxy images is given, then pair up the original WSIs and
     # proxy images.

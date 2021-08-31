@@ -5,7 +5,7 @@
 import os
 import argparse
 import warnings
-
+from pathlib import Path
 from openslide import OpenSlide, OpenSlideUnsupportedFormatError
 
 
@@ -36,6 +36,7 @@ def gather_info(input_path, output_tsv, patients):
         'level_dims\n')
 
     for patient in patients:
+        patient_id = Path(patient).name
         print('\n    [' + os.path.basename(patient.strip('.svs')) + ']')
         wsi_path = os.path.join(input_path, patient)
         try:
@@ -102,7 +103,7 @@ def gather_info(input_path, output_tsv, patients):
             selected_level = get_level_for_downsample(os_image, 4)
             selected_level_height, selected_level_width = os_image.level_dimensions[
                 selected_level]
-            tsv_file.write(patient + '\t' + wsi_path + '\t' +
+            tsv_file.write(patient_id + '\t' + wsi_path + '\t' +
                            str(obj_pow) + '\t' +
                            str(mpp_x) + '\t' + str(mpp_y) +
                            '\t' + str(correct_power_dims) +
@@ -114,7 +115,7 @@ def gather_info(input_path, output_tsv, patients):
                            '\t' + str(estimated_magnifications) +
                            '\t' + str(os_image.level_dimensions) + '\n')
         except KeyError as k:
-            print(patient + ',Error in one of the keys: %s\n' % k)
+            print(patient_id + ',Error in one of the keys: %s\n' % k)
 
 
 if __name__ == '__main__':
